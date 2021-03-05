@@ -22,3 +22,13 @@ font = pygame.font.SysFont('forte', 20)  #return a new font object that is loade
 canvas = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))  #It actually creates an instance of the pygame
 pygame.display.set_caption('Mini-Mario') #get the current window caption
 
+# creating Topscore class
+class TopScore:
+    def __init__(self):
+        self.h_score = 0  # initially high score=0
+
+    def top_score(self, score):
+        if score > self.h_score: #check the condition
+            self.h_score = score
+        return self.h_score
+    
