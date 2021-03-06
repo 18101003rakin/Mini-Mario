@@ -31,4 +31,33 @@ class TopScore:
         if score > self.h_score: #check the condition
             self.h_score = score
         return self.h_score
-    
+
+
+# class for hero Mario
+class Mini_Mario:
+    velocity = 10       #library function
+
+    def __init__(self):
+        self.mario_img = pygame.image.load('mario/maryo.png') #load new image from a file of mario
+        self.mario_img_rect = self.mario_img.get_rect()  #rect->objects to store and manipulate rectangular areas
+        self.mario_img_rect.left = 20
+        self.mario_img_rect.top = WINDOW_HEIGHT / 2 - 100 #set the window hight
+        self.down = True
+        self.up = False
+
+    #update fuction for checking mario
+    def update(self):
+        #set different conditions
+        canvas.blit(self.mario_img, self.mario_img_rect)
+        if self.mario_img_rect.top == cactus_img_rect.bottom: #check condition
+            game_over() #call game_over function
+            if SCORE > self.mario_score:  #check condition
+                self.mario_score = SCORE
+        if self.mario_img_rect.bottom >= fire_img_rect.top:  #check condition
+            game_over()   #call game_over function
+            if SCORE > self.mario_score:  #check condition
+                self.mario_score = SCORE
+        if self.up:
+            self.mario_img_rect.top -= 10
+        if self.down:
+            self.mario_img_rect.bottom += 10
