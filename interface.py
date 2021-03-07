@@ -61,3 +61,32 @@ class Mini_Mario:
             self.mario_img_rect.top -= 10
         if self.down:
             self.mario_img_rect.bottom += 10
+
+class Dragon:
+    velocity_of_dragon = 10  # movement velocity
+
+    # variables for Dragon
+    def __init__(self):
+        self.img_of_dragon = pygame.image.load('mario/dragon.png')  # insert dragon image
+        self.dragon_img_rect = self.img_of_dragon.get_rect()
+        self.dragon_img_rect.width -= 10
+        self.dragon_img_rect.height -= 10
+        self.dragon_img_rect.top = WINDOW_HEIGHT / 2
+        self.dragon_img_rect.right = WINDOW_WIDTH
+        self.up = True
+        self.down = False
+
+    # set the movement conditions of dragon
+    def update(self):
+        canvas.blit(self.img_of_dragon, self.dragon_img_rect)
+        if self.dragon_img_rect.top == cactus_img_rect.bottom:
+            self.up = False
+            self.down = True
+        elif self.dragon_img_rect.bottom >= fire_img_rect.top:
+            self.up = True
+            self.down = False
+
+        if self.up:
+            self.dragon_img_rect.top -= self. velocity_of_dragon
+        elif self.down:
+            self.dragon_img_rect.top += self. velocity_of_dragon
