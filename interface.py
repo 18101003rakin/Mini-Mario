@@ -90,3 +90,22 @@ class Dragon:
             self.dragon_img_rect.top -= self. velocity_of_dragon
         elif self.down:
             self.dragon_img_rect.top += self. velocity_of_dragon
+
+
+# class for the dragon flame
+class Flames_Of_Dragon:
+    velocity_of_flames = 20  # flame velocity
+
+    # flame variable
+    def __init__(self):
+        self.dragon_flames = pygame.image.load('mario/fire2.png')  # insert flame image
+        self.flames_img = pygame.transform.scale(self.dragon_flames, (20, 20))
+        self.flames_img_rect = self.flames_img.get_rect()
+        self.flames_img_rect.right = dragon.dragon_img_rect.left
+        self.flames_img_rect.top = dragon.dragon_img_rect.top + 30
+
+    def update(self):
+        canvas.blit(self.flames_img, self.flames_img_rect)
+
+        if self.flames_img_rect.left > 0:
+            self.flames_img_rect.left -= self.velocity_of_flames
