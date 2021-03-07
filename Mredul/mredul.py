@@ -19,3 +19,10 @@ def game_over():
                 music.stop()
                 game_loop()
         pygame.display.update()
+
+def start_game():
+    canvas.fill(BLACK)
+    start_img = pygame.image.load('mario/start.png')
+    start_img_rect = start_img.get_rect()
+    start_img_rect.center = (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
+    canvas.blit(start_img, start_img_rect)
