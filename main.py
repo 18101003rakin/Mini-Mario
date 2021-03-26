@@ -6,124 +6,126 @@ import sys
 pygame.init()
 
 # making the main window of the game
-WINDOW_WIDTH = 1200
-WINDOW_HEIGHT = 700
-FPS = 20
-BLACK = (0, 0, 0)
-GREEN = (0, 255, 0)
-ADD_NEW_FLAME_RATE = 25
-cactus_img = pygame.image.load('mario/cactus_bricks.png')
-cactus_img_rect = cactus_img.get_rect()
-cactus_img_rect.left = 0
-fire_img = pygame.image.load('mario/fire_bricks.png')
-fire_img_rect = fire_img.get_rect()
-fire_img_rect.left = 0
-CLOCK = pygame.time.Clock()
-font = pygame.font.SysFont('forte', 20)
+INTERFACE_WINDOW_WIDTH = 1200
+INTERFACE_WINDOW_HEIGHT = 700
+FRAME_PER_SECOND = 20
+BLACK_INTERFACE = (0, 0, 0)
+GREEN_INTERFACE = (0, 255, 0)
+FLAME_RATE = 25
+IMAGE_OF_CACTUS = pygame.image.load('mario/cactus_bricks.png')
+IMAGE_OF_CACTUS_rect = IMAGE_OF_CACTUS.get_rect()
+IMAGE_OF_CACTUS_rect.left = 0
+IMAGE_OF_FIRE = pygame.image.load('mario/fire_bricks.png')
+IMAGE_OF_FIRE_rect = IMAGE_OF_FIRE.get_rect()
+IMAGE_OF_FIRE_rect.left = 0
+CLOCK_RATE = pygame.time.Clock()
+FONT_STYLE = pygame.font.SysFont('forte', 20)
 
-canvas = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
-pygame.display.set_caption('Mini-Mario')
+WHOLE_CANVAS = pygame.display.set_mode((INTERFACE_WINDOW_WIDTH, INTERFACE_WINDOW_HEIGHT))
+pygame.display.set_caption('Mini-Mario vs. Dragon')
 
 
 # class for Topscore
-class TopScore:
+class TopScore_Count:
     def __init__(self):
-        self.h_score = 0  # high score
+        self.high_score = 0  # high score
 
-    def top_score(self, score):
-        if score > self.h_score:
-            self.h_score = score
-        return self.h_score
-
-
-topscore = TopScore()
+    def top_score_count(self, score):
+        if score > self.high_score:
+            self.high_score = score
+        return self.high_score
 
 
-# class for the creating villain
-class Dragon:
-    velocity_of_dragon = 10  # movement velocity
+topscore = TopScore_Count()
 
-    # variables for Dragon
+
+
+# class for the villain
+class Dragon_the_Monster:
+    velocity_of_dragon = 10 #movement velocity
+
     def __init__(self):
-        self.img_of_dragon = pygame.image.load('mario/dragon.png')  # insert dragon image
-        self.dragon_img_rect = self.img_of_dragon.get_rect()
-        self.dragon_img_rect.width -= 10
-        self.dragon_img_rect.height -= 10
-        self.dragon_img_rect.top = WINDOW_HEIGHT / 2
-        self.dragon_img_rect.right = WINDOW_WIDTH
+        self.IMAGE_OF_DRAGON = pygame.image.load('mario/dragon.png')
+        self.IMAGE_OF_DRAGON_rect = self.IMAGE_OF_DRAGON.get_rect()
+        self.IMAGE_OF_DRAGON_rect.width -= 10
+        self.IMAGE_OF_DRAGON_rect.height -= 10
+        self.IMAGE_OF_DRAGON_rect.top = INTERFACE_WINDOW_HEIGHT / 2
+        self.IMAGE_OF_DRAGON_rect.right = INTERFACE_WINDOW_WIDTH
         self.up = True
         self.down = False
 
-    # set the movement conditions of dragon
     def update(self):
-        canvas.blit(self.img_of_dragon, self.dragon_img_rect)
-        if self.dragon_img_rect.top == cactus_img_rect.bottom:
+        WHOLE_CANVAS.blit(self.IMAGE_OF_DRAGON, self.IMAGE_OF_DRAGON_rect)
+        if self.IMAGE_OF_DRAGON_rect.top == IMAGE_OF_CACTUS_rect.bottom:
             self.up = False
             self.down = True
-        elif self.dragon_img_rect.bottom >= fire_img_rect.top:
+        elif self.IMAGE_OF_DRAGON_rect.bottom >= IMAGE_OF_FIRE_rect.top:
             self.up = True
             self.down = False
 
         if self.up:
-            self.dragon_img_rect.top -= self. velocity_of_dragon
+            self.IMAGE_OF_DRAGON_rect.top -= self. velocity_of_dragon
         elif self.down:
-            self.dragon_img_rect.top += self. velocity_of_dragon
+            self.IMAGE_OF_DRAGON_rect.top += self. velocity_of_dragon
 
 
-# class for the flame
+# class for the dragon flame
 class Flames_Of_Dragon:
-    velocity_of_flames = 20
+    velocity_of_flames = 20 # flame velocity
 
+    #flame variable
     def __init__(self):
-        self.dragon_flames = pygame.image.load('mario/fire2.png')
-        self.flames_img = pygame.transform.scale(self.dragon_flames, (20, 20))
-        self.flames_img_rect = self.flames_img.get_rect()
-        self.flames_img_rect.right = dragon.dragon_img_rect.left
-        self.flames_img_rect.top = dragon.dragon_img_rect.top + 30
+        self.DRAGON_FLAMES = pygame.image.load('mario/fire2.png') # insert flame image
+        self.IMAGE_OF_FLAME = pygame.transform.scale(self.DRAGON_FLAMES, (20, 20))
+        self.IMAGE_OF_FLAME_rect = self.IMAGE_OF_FLAME.get_rect()
+        self.IMAGE_OF_FLAME_rect.right = DRAGON.IMAGE_OF_DRAGON_rect.left
+        self.IMAGE_OF_FLAME_rect.top = DRAGON.IMAGE_OF_DRAGON_rect.top + 30
 
     def update(self):
-        canvas.blit(self.flames_img, self.flames_img_rect)
+        WHOLE_CANVAS.blit(self.IMAGE_OF_FLAME, self.IMAGE_OF_FLAME_rect)
 
-        if self.flames_img_rect.left > 0:
-            self.flames_img_rect.left -= self.velocity_of_flames
+        if self.IMAGE_OF_FLAME_rect.left > 0:
+            self.IMAGE_OF_FLAME_rect.left -= self.velocity_of_flames
 
-# class for hero
+
+# class for hero Mario
 class Mini_Mario:
-    velocity = 10
+    velocity = 10       #library function
 
     def __init__(self):
-        self.mario_img = pygame.image.load('mario/maryo.png')
-        self.mario_img_rect = self.mario_img.get_rect()
-        self.mario_img_rect.left = 20
-        self.mario_img_rect.top = WINDOW_HEIGHT / 2 - 100
+        self.IMAGE_OF_MARIO = pygame.image.load('mario/maryo.png') #load new image from a file of mario
+        self.IMAGE_OF_MARIO_rect = self.IMAGE_OF_MARIO.get_rect()  #rect->objects to store and manipulate rectangular areas
+        self.IMAGE_OF_MARIO_rect.left = 20
+        self.IMAGE_OF_MARIO_rect.top = INTERFACE_WINDOW_HEIGHT / 2 - 100 #set the window hight
         self.down = True
         self.up = False
 
     def update(self):
-        canvas.blit(self.mario_img, self.mario_img_rect)
-        if self.mario_img_rect.top == cactus_img_rect.bottom:
+        #set different conditions
+        WHOLE_CANVAS.blit(self.IMAGE_OF_MARIO, self.IMAGE_OF_MARIO_rect)
+        if self.IMAGE_OF_MARIO_rect.top == IMAGE_OF_CACTUS_rect.bottom:
             game_over()
             if SCORE > self.mario_score:
                 self.mario_score = SCORE
-        if self.mario_img_rect.bottom >= fire_img_rect.top:
+        if self.IMAGE_OF_MARIO_rect.bottom >= IMAGE_OF_FIRE_rect.top:
             game_over()
-            if SCORE > self.mario_score:
-                self.mario_score = SCORE
+            if SCORE > self.MARIO_SCORE:
+                self.MARIO_SCORE = SCORE
         if self.up:
-            self.mario_img_rect.top -= 10
+            self.IMAGE_OF_MARIO_rect.top -= 10
         if self.down:
-            self.mario_img_rect.bottom += 10
+            self.IMAGE_OF_MARIO_rect.bottom += 10
 
-
+# Mredul
 def game_over():
-   # pygame.mixer.music.stop()
-   # music = pygame.mixer.Sound('mario/mario_dies.wav')
-   # music.play()
-    topscore.top_score(SCORE)
-    game_over_img = pygame.image.load('mario/end.png')
-    game_over_img_rect = game_over_img.get_rect()
-    game_over_img_rect.center = (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
-    canvas.blit(game_over_img, game_over_img_rect)
+    pygame.mixer.music.stop()
+    music = pygame.mixer.Sound('mario/mario_dies.wav')
+    music.play()
+    topscore.top_score_count(SCORE)
+    IMAGE_OF_GAMEOVER = pygame.image.load('mario/end.png')
+    IMAGE_OF_GAMEOVER_rect = IMAGE_OF_GAMEOVER.get_rect()
+    IMAGE_OF_GAMEOVER_rect.center = (INTERFACE_WINDOW_WIDTH / 2, INTERFACE_WINDOW_HEIGHT / 2)
+    WHOLE_CANVAS.blit(IMAGE_OF_GAMEOVER, IMAGE_OF_GAMEOVER_rect)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -133,17 +135,17 @@ def game_over():
                 if event.key == pygame.K_ESCAPE:
                     pygame.quit()
                     sys.exit()
-               # music.stop()
+                music.stop()
                 game_loop()
         pygame.display.update()
 
 
-def start_game():
-    canvas.fill(BLACK)
-    start_img = pygame.image.load('mario/start.png')
-    start_img_rect = start_img.get_rect()
-    start_img_rect.center = (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
-    canvas.blit(start_img, start_img_rect)
+def start_the_game():
+    WHOLE_CANVAS.fill(BLACK_INTERFACE)
+    IMAGE_OF_START_GAME = pygame.image.load('mario/start.png')
+    IMAGE_OF_START_GAME_rect = IMAGE_OF_START_GAME.get_rect()
+    IMAGE_OF_START_GAME_rect.center = (INTERFACE_WINDOW_WIDTH / 2, INTERFACE_WINDOW_HEIGHT / 2)
+    WHOLE_CANVAS.blit(IMAGE_OF_START_GAME, IMAGE_OF_START_GAME_rect)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -160,50 +162,50 @@ def start_game():
 def check_level(SCORE):
     global LEVEL
     if SCORE in range(0, 10):
-        cactus_img_rect.bottom = 50
-        fire_img_rect.top = WINDOW_HEIGHT - 50
+        IMAGE_OF_CACTUS_rect.bottom = 50
+        IMAGE_OF_FIRE_rect.top = INTERFACE_WINDOW_HEIGHT - 50
         LEVEL = 1
     elif SCORE in range(10, 20):
-        cactus_img_rect.bottom = 100
-        fire_img_rect.top = WINDOW_HEIGHT - 100
+        IMAGE_OF_CACTUS_rect.bottom = 100
+        IMAGE_OF_FIRE_rect.top = INTERFACE_WINDOW_HEIGHT - 100
         LEVEL = 2
     elif SCORE in range(20, 30):
-        cactus_img_rect.bottom = 150
-        fire_img_rect.top = WINDOW_HEIGHT - 150
+        IMAGE_OF_CACTUS_rect.bottom = 150
+        IMAGE_OF_FIRE_rect.top = INTERFACE_WINDOW_HEIGHT - 150
         LEVEL = 3
-    elif SCORE > 30:
-        cactus_img_rect.bottom = 200
-        fire_img_rect.top = WINDOW_HEIGHT - 200
+    elif SCORE is 30:
+        IMAGE_OF_CACTUS_rect.bottom = 200
+        IMAGE_OF_FIRE_rect.top = INTERFACE_WINDOW_HEIGHT - 200
         LEVEL = 4
 
 
-
+# Ayesha
 def game_loop():
     while True:
-        global dragon
-        dragon = Dragon()
-        flames = Flames_Of_Dragon()
-        mario = Mini_Mario()
-        add_new_flame_counter = 0
+        global DRAGON
+        DRAGON = Dragon_the_Monster()
+        FLAMES = Flames_Of_Dragon()
+        MARIO = Mini_Mario()
+        FLAME_COUNTER = 0
         global SCORE
         SCORE = 0
         global HIGH_SCORE
-        flames_list = []
-        #pygame.mixer.music.load('mario/mario_theme.wav')
-        #pygame.mixer.music.play(-1, 0.0)
+        FLAME_LIST = []
+        pygame.mixer.music.load('mario/mario_theme.wav')
+        pygame.mixer.music.play(-1, 0.0)
         while True:
-            canvas.fill(BLACK)
+            WHOLE_CANVAS.fill(BLACK_INTERFACE)
             check_level(SCORE)
-            dragon.update()
-            add_new_flame_counter += 1
+            DRAGON.update()
+            FLAME_COUNTER += 1
 
-            if add_new_flame_counter == ADD_NEW_FLAME_RATE:
-                add_new_flame_counter = 0
+            if FLAME_COUNTER == FLAME_RATE:
+                FLAME_COUNTER = 0
                 new_flame = Flames_Of_Dragon()
-                flames_list.append(new_flame)
-            for f in flames_list:
-                if f.flames_img_rect.left <= 0:
-                    flames_list.remove(f)
+                FLAME_LIST.append(new_flame)
+            for f in FLAME_LIST:
+                if f.IMAGE_OF_FLAME_rect.left <= 0:
+                    FLAME_LIST.remove(f)
                     SCORE += 1
                 f.update()
 
@@ -213,44 +215,44 @@ def game_loop():
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_UP:
-                        mario.up = True
-                        mario.down = False
+                        MARIO.up = True
+                        MARIO.down = False
                     elif event.key == pygame.K_DOWN:
-                        mario.down = True
-                        mario.up = False
+                        MARIO.down = True
+                        MARIO.up = False
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_UP:
-                        mario.up = False
-                        mario.down = True
+                        MARIO.up = False
+                        MARIO.down = True
                     elif event.key == pygame.K_DOWN:
-                        mario.down = True
-                        mario.up = False
+                        MARIO.down = True
+                        MARIO.up = False
 
-            score_font = font.render('Score:' + str(SCORE), True, GREEN)
-            score_font_rect = score_font.get_rect()
-            score_font_rect.center = (200, cactus_img_rect.bottom + score_font_rect.height / 2)
-            canvas.blit(score_font, score_font_rect)
+            FONT_OF_SCORE = FONT_STYLE.render('Score:' + str(SCORE), True, GREEN_INTERFACE)
+            FONT_OF_SCORE_rect = FONT_OF_SCORE.get_rect()
+            FONT_OF_SCORE_rect.center = (200, IMAGE_OF_CACTUS_rect.bottom + FONT_OF_SCORE_rect.height / 2)
+            WHOLE_CANVAS.blit(FONT_OF_SCORE, FONT_OF_SCORE_rect)
 
-            level_font = font.render('Level:' + str(LEVEL), True, GREEN)
-            level_font_rect = level_font.get_rect()
-            level_font_rect.center = (500, cactus_img_rect.bottom + score_font_rect.height / 2)
-            canvas.blit(level_font, level_font_rect)
+            FONT_OF_LEVEL = FONT_STYLE.render('Level:' + str(LEVEL), True, GREEN_INTERFACE)
+            FONT_OF_LEVEL_rect = FONT_OF_LEVEL.get_rect()
+            FONT_OF_LEVEL_rect.center = (500, IMAGE_OF_CACTUS_rect.bottom + FONT_OF_SCORE_rect.height / 2)
+            WHOLE_CANVAS.blit(FONT_OF_LEVEL, FONT_OF_LEVEL_rect)
 
-            top_score_font = font.render('Top Score:' + str(topscore.h_score), True, GREEN)
-            top_score_font_rect = top_score_font.get_rect()
-            top_score_font_rect.center = (800, cactus_img_rect.bottom + score_font_rect.height / 2)
-            canvas.blit(top_score_font, top_score_font_rect)
+            FONT_OF_TOPSCORE = FONT_STYLE.render('Top Score:' + str(topscore.high_score), True, GREEN_INTERFACE)
+            FONT_OF_TOPSCORE_rect = FONT_OF_TOPSCORE.get_rect()
+            FONT_OF_TOPSCORE_rect.center = (800, IMAGE_OF_CACTUS_rect.bottom + FONT_OF_SCORE_rect.height / 2)
+            WHOLE_CANVAS.blit(FONT_OF_TOPSCORE, FONT_OF_TOPSCORE_rect)
 
-            canvas.blit(cactus_img, cactus_img_rect)
-            canvas.blit(fire_img, fire_img_rect)
-            mario.update()
-            for f in flames_list:
-                if f.flames_img_rect.colliderect(mario.mario_img_rect):
+            WHOLE_CANVAS.blit(IMAGE_OF_CACTUS, IMAGE_OF_CACTUS_rect)
+            WHOLE_CANVAS.blit(IMAGE_OF_FIRE, IMAGE_OF_FIRE_rect)
+            MARIO.update()
+            for f in FLAME_LIST:
+                if f.IMAGE_OF_FLAME_rect.colliderect(MARIO.IMAGE_OF_MARIO_rect):
                     game_over()
-                    if SCORE > mario.mario_score:
-                        mario.mario_score = SCORE
+                    if SCORE > MARIO.mario_score:
+                        MARIO.mario_score = SCORE
             pygame.display.update()
-            CLOCK.tick(FPS)
+            CLOCK_RATE.tick(FRAME_PER_SECOND)
 
 
-start_game()
+start_the_game()
